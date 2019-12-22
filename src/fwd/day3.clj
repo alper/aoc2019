@@ -69,9 +69,23 @@
 (def sample2 "R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51\nU98,R91,D20,R16,D67,R40,U7,R15,U6,R7")
 (def full-input (slurp "3-input.txt"))
 
-(defn -main
+(defn part1
   []
   (println "Running")
   (let [[one two] (parse-day3 full-input)]
-    (println "Distance of the shortest overlap is:" (dist-to-origin (closest-to-origin (find-overlaps
-                                                                                        (generate-points-from-steps one) (generate-points-from-steps two)))))))
+    (println "Distance of the shortest overlap is:" 
+             (dist-to-origin 
+              (closest-to-origin 
+               (find-overlaps
+                (generate-points-from-steps one) 
+                (generate-points-from-steps two)))))))
+
+
+(defn part2 [] (let [[one two] (parse-day3 full-input)
+                     onePoints (generate-points-from-steps one)
+                     twoPoints (generate-points-from-steps two)
+                     overlaps (find-overlaps onePoints twoPoints)
+                     distances (map (fn [point]
+                                      (+
+                                       (.indexOf onePoints point) (.indexOf twoPoints point))) overlaps)]
+              (println (apply min distances))))
