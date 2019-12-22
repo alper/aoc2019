@@ -19,11 +19,12 @@
 (defn loc-from-loc
   "Loc is a hash with :x and :y, step is a vector with a direction string and an integer. Returns a list of locations that have been stepped over."
   [loc [dir len]]
-  (case dir
-    "R" (map (fn [step] (update loc :x + step)) (range 1 (+ len 1)))
-    "L" (map (fn [step] (update loc :x - step)) (range 1 (+ len 1)))
-    "U" (map (fn [step] (update loc :y + step)) (range 1 (+ len 1)))
-    "D" (map (fn [step] (update loc :y - step)) (range 1 (+ len 1)))))
+  (let [offsets (range 1 (+ 1 len))]
+    (case dir
+      "R" (map (fn [step] (update loc :x + step)) offsets)
+      "L" (map (fn [step] (update loc :x - step)) offsets)
+      "U" (map (fn [step] (update loc :y + step)) offsets)
+      "D" (map (fn [step] (update loc :y - step)) offsets))))
 
 (def origin {:x 0 :y 0})
 
