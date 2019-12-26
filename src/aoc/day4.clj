@@ -1,4 +1,4 @@
-(ns fwd.day4
+(ns aoc.day4
 ;   (:require [clojure.string :as s])
   )
 
@@ -36,3 +36,8 @@
 ; Not bothering with part 2
 
 (defn calculateResultPart2 [] (count (filter check-part2? (range lower-bound upper-bound))))
+
+(defn -main
+  []
+  (println (calculateResult))
+  (println (calculateResultPart2)))

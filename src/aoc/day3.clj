@@ -1,4 +1,4 @@
-(ns fwd.core)
+(ns aoc.day3)
 
 (require 'clojure.string)
 (require 'clojure.set)

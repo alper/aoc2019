@@ -1,6 +1,6 @@
-(ns fwd.day4-test
+(ns aoc.day4-test
   (:require [clojure.test :refer :all]
-            [fwd.day4 :refer :all]))
+            [aoc.day4 :refer :all]))
 
 (deftest digits-test
   (testing "Testing the digits"
