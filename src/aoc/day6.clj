@@ -1,6 +1,5 @@
 (ns aoc.day6
-  (:require [clojure.string :as s])
-  )
+  (:require [clojure.string :as s]))
 
 ; Part 1
 
@@ -22,8 +21,26 @@ K)L")
   [s]
   (->> s
        (s/split-lines)
-       (map #(s/split % #"\)")))
-  )
+       (map #(s/split % #"\)"))))
+
+; (defn adjacency-map
+;   [s]
+;   (->> s
+;        (s/split-lines)
+;        (map #(s/split % #"\)"))
+;        (reduce (fn [coll, kv] (update coll (first kv) #(concat %1 (second kv)))) {})))
+
+(defn tree-root
+  [adj-list]
+  (let [orbiter-set (->> adj-list
+                         (map second)
+                         (set))
+        orbitee-set (->> adj-list
+                         (map first)
+                         (set))
+        root-orbitee (->> orbitee-set
+                          (filter #(not (contains? orbiter-set %1))))]
+    (first root-orbitee)))
 
 (defn tree-descendants
   [adj-list val]
@@ -47,21 +64,6 @@ K)L")
       (->branch val (map ->tree' kids))
       (->leaf val))))
 
-; (defn number-of-orbits
-;   ([tree] (number-of-orbits tree 0))
-;   ([tree orbits] (let [[head & rest :as tree] tree, orbits orbits]
-;                    (cond 
-;                      (empty? tree) orbits
-;                      (empty? rest) orbits
-;                      (seq? rest) (reduce + (map number-of-orbits rest (inc orbits)))))))
-
-; (defn sum-of-depths
-;   [tree cur-depth] (let [[head & rest] tree]
-;                      (if (empty? rest)
-;                        cur-depth
-;                        (reduce + cur-depth (map (partial ) rest)))))
-
-
 (defn sum-of-depths
   [branches]
   (loop [branches branches
@@ -73,3 +75,10 @@ K)L")
              (mapcat (fn [node] (second node)) branches)
              (inc cur-depth)
              (+ total-depth (* (count branches) cur-depth))))))
+
+(defn do-part1
+  []
+  (let [adjacencies (adjacency-list (slurp "6-input.txt"))
+        root (tree-root adjacencies)
+        tree (->tree adjacencies root)]
+    (sum-of-depths [tree])))

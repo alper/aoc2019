@@ -10,3 +10,7 @@
 (deftest tree-descendants-test
   (testing "Testing descendents"
     (is (= ["F" "J"] (tree-descendants (adjacency-list sample) "E")))))
+
+(deftest part1-test
+  (testing "Result of part1"
+    (is (= 227612 (do-part1)))))
