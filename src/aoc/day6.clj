@@ -117,7 +117,7 @@ I)SAN")
           m)))
 
 (defn path-to-root
-  "The core idea of this solution is to calculate the path to the root for both nodes. The part of the path that is not common is where both sides branch of and as such also the path to be followed to get to each other."
+  "The core idea of this solution is to calculate the path to the root for both nodes. The part of the path that is not common is where both sides branch of and as such those two fragments are the path to get from one to the other."
   [adjacency-map val]
   (loop [child val
          parent-key (get-key-for-value adjacency-map child)
