@@ -1,5 +1,6 @@
 (ns aoc.day6
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [clojure.set]))
 
 ; Part 1
 
@@ -22,13 +23,6 @@ K)L")
   (->> s
        (s/split-lines)
        (map #(s/split % #"\)"))))
-
-; (defn adjacency-map
-;   [s]
-;   (->> s
-;        (s/split-lines)
-;        (map #(s/split % #"\)"))
-;        (reduce (fn [coll, kv] (update coll (first kv) #(concat %1 (second kv)))) {})))
 
 (defn tree-root
   [adj-list]
@@ -82,3 +76,65 @@ K)L")
         root (tree-root adjacencies)
         tree (->tree adjacencies root)]
     (sum-of-depths [tree])))
+
+; Part 2
+
+(def sample2 "COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L
+K)YOU
+I)SAN")
+
+(defn put-orbits-in-map
+  [coll, pair]
+  (update coll 
+          (first pair) 
+          #(concat %1 [(second pair)])))
+
+(defn adjacency-map
+  "Creates a map of the adjacencies which makes building a tree unnecessary."
+  [s]
+  (->> s
+       (s/split-lines)
+       (map #(s/split % #"\)"))
+       (reduce put-orbits-in-map {})))
+
+(defn get-key-for-value
+  "Given a v and a map return the key whose list value contains v."
+  [m v]
+  (first (keep 
+          #(when 
+            (not= -1 (.indexOf (val %) v))
+             (key %))
+          m)))
+
+(defn path-to-root
+  "The core idea of this solution is to calculate the path to the root for both nodes. The part of the path that is not common is where both sides branch of and as such also the path to be followed to get to each other."
+  [adjacency-map val]
+  (loop [child val
+         parent-key (get-key-for-value adjacency-map child)
+         path []]
+    (if parent-key
+      (recur parent-key 
+             (get-key-for-value adjacency-map parent-key) 
+             (conj path parent-key))
+      path)))
+
+(defn do-part2
+  []
+  (let [adj-map (adjacency-map (slurp "6-input.txt"))
+        path1 (set (path-to-root adj-map "YOU"))
+        path2 (set (path-to-root adj-map "SAN"))
+        unique1 (clojure.set/difference path1 path2)
+        unique2 (clojure.set/difference path2 path1)]
+    (+ (count unique1) (count unique2))))
+
+; => 454
