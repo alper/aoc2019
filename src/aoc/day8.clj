@@ -30,3 +30,35 @@
 ; => 1072
 
 ; part 2
+
+(def sample2 "0222112222120000")
+(def sample-width 2)
+(def sample-height 2)
+
+(defn calculate-color
+  [pxs]
+  (->> pxs
+       (drop-while #(= 2 %))
+       (first)))
+
+(defn do-part2
+  []
+  (let [data (slurp "8-input.txt")
+        width width
+        pixels (* width height)]
+    (->> data
+         (map (comp #(Integer/parseInt %) str))
+         (partition pixels)
+         (apply interleave)
+         (partition (/ (count data) pixels))
+         (map calculate-color)
+         (partition width))))
+
+; ((1 0 0 0 1 1 0 0 0 0 1 1 1 1 0 1 1 1 0 0 0 0 1 1 0)
+;  (1 0 0 0 1 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 1 0)
+;  (0 1 0 1 0 1 0 0 0 0 1 1 1 0 0 1 0 0 1 0 0 0 0 1 0)
+;  (0 0 1 0 0 1 0 0 0 0 1 0 0 0 0 1 1 1 0 0 0 0 0 1 0)
+;  (0 0 1 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 1 0)
+;  (0 0 1 0 0 1 1 1 1 0 1 0 0 0 0 1 0 0 0 0 0 1 1 0 0))
+
+; YLFPJ
